@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tbl_games")
-public class GamesEntity {
+public class GameEntity {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
@@ -25,10 +25,10 @@ public class GamesEntity {
    @Column(columnDefinition = "TEXT")
    private String longDescription;
 
-   public GamesEntity() {
+   public GameEntity() {
    }
 
-   public GamesEntity(Long id, String title, Integer year, String genre,
+   public GameEntity(Long id, String title, Integer year, String genre,
          String platform, Double score, String imgUrl, String shortDescription,
          String longDescription) {
 
@@ -130,7 +130,7 @@ public class GamesEntity {
          return false;
       if (getClass() != obj.getClass())
          return false;
-      GamesEntity other = (GamesEntity) obj;
+      GameEntity other = (GameEntity) obj;
       if (id == null) {
          if (other.id != null)
             return false;
