@@ -15,10 +15,8 @@ services:
     environment:
       # "-Dserver.port=$PORT", "-Dspring.profiles.active=test"
       - JAVA_OPTS="-XX:+UseContainerSupport, -Xmx300m, -Xss512k, -XX:CICompilerCount=2, -Dfile.encoding=UTF-8"
-      # - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     working_dir: /app
-    # command: ["./mvnw", "spring-boot:run"]
-    command: ["./mvnw", "spring-boot:run", '-Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"']
+    command: ["./mvnw", "spring-boot:run"]
     networks:
       - net
 
