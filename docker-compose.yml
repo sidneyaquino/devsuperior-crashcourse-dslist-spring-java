@@ -5,7 +5,7 @@ services:
   # ====================================================================================================================
   # docker run -itd --name="app" -v $PWD:/app -w "/app" -p "8080:8080" azul/zulu-openjdk:17 ./mvnw spring-boot:run
   web:
-    image: azul/zulu-openjdk:17
+    image: azul/zulu-openjdk-alpine:17
     container_name: app
     ports:
       - 8080:8080

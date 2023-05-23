@@ -62,6 +62,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+				   <layers>
+            		<enabled>true</enabled>
+        			</layers>
 					<jvmArguments>
 						<!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005 -->
 						-Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
