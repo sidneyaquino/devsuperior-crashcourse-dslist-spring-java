@@ -16,7 +16,7 @@ services:
       # "-Dserver.port=$PORT", "-Dspring.profiles.active=test"
       - JAVA_OPTS="-XX:+UseContainerSupport, -Xmx300m, -Xss512k, -XX:CICompilerCount=2, -Dfile.encoding=UTF-8"
     working_dir: /app
-    command: ["./mvnw", "spring-boot:run"]
+    command: [./mvnw, spring-boot:run, -Dspring-boot.run.jvmArguments=$JAVA_OPTS]
     networks:
       - net
 
