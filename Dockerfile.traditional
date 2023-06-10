@@ -1,16 +1,23 @@
-FROM azul/zulu-openjdk-alpine:17 AS builder
+FROM bellsoft/liberica-runtime-container:jdk-17-slim-musl AS builder
 WORKDIR /tmp
-COPY .mvn .mvn
-COPY mvnw pom.xml ./
+COPY --link .mvn/ .mvn
+COPY --link mvnw pom.xml ./
 RUN ./mvnw dependency:resolve
-COPY src src
+COPY --link src/ src
 RUN ./mvnw clean package -DskipTests -Djacoco.skip
 RUN mv $(ls target/*.jar) target/app.jar
 
-FROM azul/zulu-openjdk-alpine:17-jre AS runner
+FROM bellsoft/liberica-runtime-container:jre-17-slim-musl
+RUN addgroup --system javauser && \
+   # adduser --system --disabled-login --disabled-password --no-create-home --ingroup javauser javauser
+   adduser -S -s /usr/sbin/nologin -D -H -G javauser javauser  # alpine
 WORKDIR /app
-COPY --from=builder /tmp/target/app.jar .
-# "-Dserver.port=$PORT", "-Dspring.profiles.active=test"
+COPY --link --from=builder /tmp/target/app.jar ./
+RUN chown -R javauser:javauser .
+USER javauser
 ENV JAVA_OPTS="-XX:+UseContainerSupport -Xmx300m -Xss512k -XX:CICompilerCount=2 -Dfile.encoding=UTF-8"
-ENTRYPOINT java -jar app.jar $JAVA_OPTS
-EXPOSE 8080
+CMD java \
+   $JAVA_OPTS \
+   -Dserver.port=$PORT \
+   -Dspring.profiles.active=test \
+   -jar app.jar  

@@ -1,22 +1,26 @@
 version: "3.8"
 services:
   # ====================================================================================================================
-  # JDK - RUN APP
+  # APP
   # ====================================================================================================================
-  # docker run -itd --name="app" -v $PWD:/app -w "/app" -p "8080:8080" azul/zulu-openjdk:17 ./mvnw spring-boot:run
+  # docker run -itd --name="app" -v $PWD:/app -w "/app" -p "8080:8080" ????/????-openjdk:17 ./mvnw spring-boot:run
   web:
-    image: azul/zulu-openjdk-alpine:17
+    image: bellsoft/liberica-runtime-container:jdk-17-slim-musl
     container_name: app
-    ports:
-      - 8080:8080
-      - 5005:5005
+    working_dir: /app
     volumes:
       - $PWD:/app
+    ports:
+      - 5005:5005
+      - ${PORT}:${PORT}
     environment:
-      # "-Dserver.port=$PORT", "-Dspring.profiles.active=test"
-      - JAVA_OPTS="-XX:+UseContainerSupport, -Xmx300m, -Xss512k, -XX:CICompilerCount=2, -Dfile.encoding=UTF-8"
-    working_dir: /app
-    command: [./mvnw, spring-boot:run, -Dspring-boot.run.jvmArguments=$JAVA_OPTS]
+      - JAVA_OPTS="-XX:+UseContainerSupport,-Xmx300m,-Xss512k,-XX:CICompilerCount=2,-Dfile.encoding=UTF-8"
+    command: [
+      ./mvnw, 
+      spring-boot:run, 
+      -Dspring-boot.run.jvmArguments=$JAVA_OPTS, 
+      "-Dspring-boot.run.arguments='--server.port='${PORT}"
+    ]
     networks:
       - net
 
