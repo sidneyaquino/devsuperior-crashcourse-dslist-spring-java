@@ -16,10 +16,10 @@ services:
     environment:
       - JAVA_OPTS="-XX:+UseContainerSupport,-Xmx300m,-Xss512k,-XX:CICompilerCount=2,-Dfile.encoding=UTF-8"
     command: [
-      ./mvnw, 
-      spring-boot:run, 
-      -Dspring-boot.run.jvmArguments=$JAVA_OPTS, 
-      "-Dspring-boot.run.arguments='--server.port='${PORT}"
+      /bin/sh, -c, "./mvnw
+      spring-boot:run
+      -Dspring-boot.run.jvmArguments=$JAVA_OPTS
+      -Dspring-boot.run.arguments='--server.port='${PORT}"
     ]
     networks:
       - net

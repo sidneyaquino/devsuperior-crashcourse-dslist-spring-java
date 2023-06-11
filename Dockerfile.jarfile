@@ -1,23 +1,24 @@
-FROM bellsoft/liberica-runtime-container:jdk-17-slim-musl AS builder
-WORKDIR /tmp
+FROM bellsoft/liberica-runtime-container:jdk-17-slim-musl AS build
+WORKDIR /build
 COPY --link .mvn/ .mvn
 COPY --link mvnw pom.xml ./
 RUN ./mvnw dependency:resolve
 COPY --link src/ src
-RUN ./mvnw clean package -DskipTests -Djacoco.skip
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests -Djacoco.skip
 RUN mv $(ls target/*.jar) target/app.jar
 
 FROM bellsoft/liberica-runtime-container:jre-17-slim-musl
+VOLUME /tmp
 RUN addgroup --system javauser && \
-   # adduser --system --disabled-login --disabled-password --no-create-home --ingroup javauser javauser
    adduser -S -s /usr/sbin/nologin -D -H -G javauser javauser  # alpine
+   # adduser --system --disabled-login --disabled-password --no-create-home --ingroup javauser javauser
 WORKDIR /app
-COPY --link --from=builder /tmp/target/app.jar ./
-RUN chown -R javauser:javauser .
+ARG DEPENDENCY=/build/target
+COPY --link --chown=javauser --from=build ${DEPENDENCY}/app.jar ./
 USER javauser
 ENV JAVA_OPTS="-XX:+UseContainerSupport -Xmx300m -Xss512k -XX:CICompilerCount=2 -Dfile.encoding=UTF-8"
-CMD java \
+CMD /bin/sh -c "java \
    $JAVA_OPTS \
    -Dserver.port=$PORT \
    -Dspring.profiles.active=test \
-   -jar app.jar  
+   -jar app.jar"
