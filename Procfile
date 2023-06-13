@@ -1,1 +1,0 @@
- web /bin/sh -c "java $JAVA_OPTS -Dserver.port=$PORT -Dspring.profiles.active=test -jar target/dslist-0.0.1-SNAPSHOT.jar"
