@@ -5,7 +5,7 @@ services:
   # ====================================================================================================================
   # docker run -itd --name="app" -v $PWD:/app -w "/app" -p "8080:8080" ????/????-openjdk:17 ./mvnw spring-boot:run
   web:
-    image: bellsoft/liberica-runtime-container:jdk-17-slim-musl
+    image: ghcr.io/graalvm/graalvm-ce:ol9-java17
     container_name: app
     working_dir: /app
     volumes:

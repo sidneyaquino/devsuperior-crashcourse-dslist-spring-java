@@ -1,25 +1,24 @@
-FROM bellsoft/liberica-runtime-container:jdk-17-slim-musl AS build
-WORKDIR /build
+FROM ghcr.io/graalvm/graalvm-ce:ol9-java17 AS build
+WORKDIR /tmp
 COPY --link .mvn/ .mvn
 COPY --link mvnw pom.xml ./
-RUN ./mvnw dependency:resolve
+RUN --mount=type=cache,target=/root/.m2 ./mvnw dependency:resolve
 COPY --link src/ src
-RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests -Djacoco.skip
+RUN --mount=type=cache,target=/root/.m2 ./mvnw package -DskipTests -Djacoco.skip
 RUN java -Djarmode=layertools -jar $(ls target/*.jar) extract --destination target/extracted
 
 FROM bellsoft/liberica-runtime-container:jre-17-slim-musl
-VOLUME /tmp
 RUN addgroup --system javauser && \
    adduser -S -s /usr/sbin/nologin -D -H -G javauser javauser  # alpine
    # adduser --system --disabled-login --disabled-password --no-create-home --ingroup javauser javauser
-WORKDIR /app
-ARG DEPENDENCY=/build/target/extracted
-COPY --link --chown=javauser --from=build ${DEPENDENCY}/dependencies/ ./
-COPY --link --chown=javauser --from=build ${DEPENDENCY}/spring-boot-loader/ ./
-COPY --link --chown=javauser --from=build ${DEPENDENCY}/snapshot-dependencies/ ./
-COPY --link --chown=javauser --from=build ${DEPENDENCY}/application/ ./
-USER javauser
+ARG DEPENDENCY=/tmp/target/extracted
+COPY --link --chown=javauser --from=build ${DEPENDENCY}/dependencies/ /app
+COPY --link --chown=javauser --from=build ${DEPENDENCY}/spring-boot-loader/ /app
+COPY --link --chown=javauser --from=build ${DEPENDENCY}/snapshot-dependencies/ /app
+COPY --link --chown=javauser --from=build ${DEPENDENCY}/application/ /app
 ENV JAVA_OPTS="-XX:+UseContainerSupport -Xmx300m -Xss512k -XX:CICompilerCount=2 -Dfile.encoding=UTF-8"
+USER javauser
+WORKDIR /app
 CMD /bin/sh -c "java \
    $JAVA_OPTS \
    -Dserver.port=$PORT \
