@@ -20,12 +20,48 @@ services:
       /bin/sh, -c, "./mvnw spring-boot:run
       -Dspring-boot.run.arguments='--server.port='$PORT"
     ]
+    depends_on:
+      - sql
     networks:
-      - net
+      - network
+
+  # ====================================================================================================================
+  # POSTGRES SERVER
+  # ====================================================================================================================
+  sql:
+    image: postgres:14-alpine
+    container_name: postegres
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_PASSWORD: 1234567
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.data/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - network
+
+# ====================================================================================================================
+# PGADMIN
+# ====================================================================================================================
+  sql-cli:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: me@pexample.com
+      PGADMIN_DEFAULT_PASSWORD: 1234567
+    ports:
+      - 80:80
+    volumes:
+      - ./.data/pgadmin:/var/lib/pgdamin
+    depends_on:
+      - sql
+    networks:
+      - network
 
 # ======================================================================================================================
 # NET
 # ======================================================================================================================
 networks:
-  net:
+  network:
     driver: bridge

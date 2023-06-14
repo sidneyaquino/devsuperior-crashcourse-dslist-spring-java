@@ -7,7 +7,7 @@ public class GameBasicDTO {
 
    private Long id;
    private String title;
-   private Integer year;
+   private Integer gameYear;
    private String imgUrl;
    private String shortDescription;
 
@@ -26,7 +26,7 @@ public class GameBasicDTO {
    public GameBasicDTO(GameEntity entity) {
       this.id = entity.getId();
       this.title = entity.getTitle();
-      this.year = entity.getYear();
+      this.gameYear = entity.getYear();
       this.imgUrl = entity.getImgUrl();
       this.shortDescription = entity.getShortDescription();
    }
@@ -34,7 +34,7 @@ public class GameBasicDTO {
    public GameBasicDTO(GameBasicProjection projection) {
       this.id = projection.getId();
       this.title = projection.getTitle();
-      this.year = projection.getYear();
+      this.gameYear = projection.getYear();
       this.imgUrl = projection.getImgUrl();
       this.shortDescription = projection.getShortDescription();
    }
@@ -54,7 +54,7 @@ public class GameBasicDTO {
    // }
 
    public Integer getYear() {
-      return year;
+      return gameYear;
    }
    // public void setYear(Integer year) {
    // this.year = year;

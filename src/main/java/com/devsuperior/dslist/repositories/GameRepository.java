@@ -13,7 +13,7 @@ public interface GameRepository extends JpaRepository<GameEntity, Long> {
    @Query(nativeQuery = true, value = """
             SELECT tbl_games.id,
                tbl_games.title,
-               tbl_games.year_release AS `year`,
+               tbl_games.year_release AS gameYear,
                tbl_games.img_url AS imgUrl,
                tbl_games.short_description AS shortDescription,
                tbl_belonging.position
