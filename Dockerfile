@@ -15,11 +15,6 @@ ARG DEPENDENCY=/tmp/target/dependency
 COPY --link --chown=javauser --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --link --chown=javauser --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --link --chown=javauser --from=build ${DEPENDENCY}/BOOT-INF/classes /app
-ENV JAVA_OPTS="-XX:+UseContainerSupport -Xmx300m -Xss512k -XX:CICompilerCount=2 -Dfile.encoding=UTF-8"
 USER javauser
-CMD java \
-   $JAVA_OPTS \
-   -Dserver.port=$PORT \
-   -Dspring.profiles.active=test \
-   -cp app:app/lib/* \
+CMD java $JAVA_OPTS -Dserver.port=$PORT -cp app:app/lib/* \
    $(find app/com -name '*Application*' | sed 's/\//./g' | sed 's/app.//' | sed 's/.class//')

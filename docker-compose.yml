@@ -10,16 +10,15 @@ services:
     working_dir: /app
     volumes:
       - $PWD:/app
+      - ${HOME}/.m2/repository:/root/.m2/repository
     ports:
       - 5005:5005
-      - ${PORT}:${PORT}
+      - $PORT:$PORT
     environment:
-      - JAVA_OPTS="-XX:+UseContainerSupport,-Xmx300m,-Xss512k,-XX:CICompilerCount=2,-Dfile.encoding=UTF-8"
+      PORT: ${PORT}
     command: [
-      /bin/sh, -c, "./mvnw
-      spring-boot:run
-      -Dspring-boot.run.jvmArguments=$JAVA_OPTS
-      -Dspring-boot.run.arguments='--server.port='${PORT}"
+      /bin/sh, -c, "./mvnw spring-boot:run
+      -Dspring-boot.run.arguments='--server.port='$PORT"
     ]
     networks:
       - net

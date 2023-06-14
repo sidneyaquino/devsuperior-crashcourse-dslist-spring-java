@@ -16,11 +16,6 @@ COPY --link --chown=javauser --from=build ${DEPENDENCY}/dependencies/ /app
 COPY --link --chown=javauser --from=build ${DEPENDENCY}/spring-boot-loader/ /app
 COPY --link --chown=javauser --from=build ${DEPENDENCY}/snapshot-dependencies/ /app
 COPY --link --chown=javauser --from=build ${DEPENDENCY}/application/ /app
-ENV JAVA_OPTS="-XX:+UseContainerSupport -Xmx300m -Xss512k -XX:CICompilerCount=2 -Dfile.encoding=UTF-8"
-USER javauser
 WORKDIR /app
-CMD /bin/sh -c "java \
-   $JAVA_OPTS \
-   -Dserver.port=$PORT \
-   -Dspring.profiles.active=test \
-   org.springframework.boot.loader.JarLauncher"
+USER javauser
+CMD /bin/sh -c "java $JAVA_OPTS -Dserver.port=$PORT org.springframework.boot.loader.JarLauncher"

@@ -12,12 +12,6 @@ RUN addgroup --system javauser && \
    adduser -S -s /usr/sbin/nologin -D -H -G javauser javauser  # alpine
    # adduser --system --disabled-login --disabled-password --no-create-home --ingroup javauser javauser
 ARG DEPENDENCY=/tmp/target
-COPY --link --chown=javauser --from=build ${DEPENDENCY}/app.jar ./
-ENV JAVA_OPTS="-XX:+UseContainerSupport -Xmx300m -Xss512k -XX:CICompilerCount=2 -Dfile.encoding=UTF-8"
+COPY --link --chown=javauser --from=build ${DEPENDENCY}/app.jar /app/
 USER javauser
-WORKDIR /app
-CMD /bin/sh -c "java \
-   $JAVA_OPTS \
-   -Dserver.port=$PORT \
-   -Dspring.profiles.active=test \
-   -jar app.jar"
+CMD /bin/sh -c "java $JAVA_OPTS -Dserver.port=$PORT -jar /app/app.jar"
