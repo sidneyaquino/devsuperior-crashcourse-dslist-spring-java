@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/graalvm-ce:ol9-java17 AS build
+FROM bellsoft/liberica-runtime-container:jdk-17-slim-musl AS build
 WORKDIR /tmp
 COPY --link .mvn/ .mvn
 COPY --link mvnw pom.xml ./

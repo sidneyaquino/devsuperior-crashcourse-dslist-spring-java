@@ -3,9 +3,8 @@ services:
   # ====================================================================================================================
   # APP
   # ====================================================================================================================
-  # docker run -itd --name="app" -v $PWD:/app -w "/app" -p "8080:8080" ????/????-openjdk:17 ./mvnw spring-boot:run
   web:
-    image: ghcr.io/graalvm/graalvm-ce:ol9-java17
+    image: bellsoft/liberica-native-image-kit-container:jdk-17-nik-22-musl
     container_name: app
     working_dir: /app
     volumes:
@@ -29,8 +28,9 @@ services:
   # POSTGRES SERVER
   # ====================================================================================================================
   sql:
-    image: postgres:14-alpine
-    container_name: postegres
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: always    
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_PASSWORD: 1234567
@@ -44,20 +44,20 @@ services:
 # ====================================================================================================================
 # PGADMIN
 # ====================================================================================================================
-  sql-cli:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: me@pexample.com
-      PGADMIN_DEFAULT_PASSWORD: 1234567
-    ports:
-      - 80:80
-    volumes:
-      - ./.data/pgadmin:/var/lib/pgdamin
-    depends_on:
-      - sql
-    networks:
-      - network
+  # sql-cli:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: me@pexample.com
+  #     PGADMIN_DEFAULT_PASSWORD: 1234567
+  #   ports:
+  #     - 80:80
+  #   volumes:
+  #     - ./.data/pgadmin:/var/lib/pgdamin
+  #   depends_on:
+  #     - sql
+  #   networks:
+  #     - network
 
 # ======================================================================================================================
 # NET
