@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-native-image-kit-container:jdk-17-nik-22-musl AS build
+FROM azul/zulu-openjdk-alpine:20 AS build
 WORKDIR /tmp
 COPY --link .mvn/ .mvn
 COPY --link mvnw pom.xml ./
@@ -7,7 +7,7 @@ COPY --link src/ src
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests -Djacoco.skip
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-FROM bellsoft/liberica-runtime-container:jre-17-slim-musl
+FROM azul/zulu-openjdk-alpine:20-jre
 RUN addgroup --system javauser && \
    adduser -S -s /usr/sbin/nologin -D -H -G javauser javauser  # alpine
    # adduser --system --disabled-login --disabled-password --no-create-home --ingroup javauser javauser

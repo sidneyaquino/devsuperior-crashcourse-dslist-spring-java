@@ -4,7 +4,7 @@ services:
   # APP
   # ====================================================================================================================
   web:
-    image: bellsoft/liberica-native-image-kit-container:jdk-17-nik-22-musl
+    image: azul/zulu-openjdk-alpine:20
     container_name: app
     working_dir: /app
     volumes:
