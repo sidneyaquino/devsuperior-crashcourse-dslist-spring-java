@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-runtime-container:jdk-17-slim-musl AS build
+FROM bellsoft/liberica-native-image-kit-container:jdk-17-nik-22-musl AS build
 WORKDIR /tmp
 COPY --link .mvn/ .mvn
 COPY --link mvnw pom.xml ./

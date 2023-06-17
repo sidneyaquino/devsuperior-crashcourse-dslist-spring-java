@@ -15,6 +15,7 @@ services:
       - $PORT:$PORT
     environment:
       PORT: ${PORT}
+      APP_PROFILE: dev
     command: [
       /bin/sh, -c, "./mvnw spring-boot:run
       -Dspring-boot.run.arguments='--server.port='$PORT"
@@ -23,6 +24,7 @@ services:
       - sql
     networks:
       - network
+    restart: always
 
   # ====================================================================================================================
   # POSTGRES SERVER
@@ -30,7 +32,6 @@ services:
   sql:
     image: postgres:15-alpine
     container_name: postgres
-    restart: always    
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_PASSWORD: 1234567
@@ -40,6 +41,7 @@ services:
       - ./.data/postgresql/data:/var/lib/postgresql/data
     networks:
       - network
+    restart: always
 
 # ====================================================================================================================
 # PGADMIN
@@ -58,6 +60,7 @@ services:
   #     - sql
   #   networks:
   #     - network
+  #   restart: always
 
 # ======================================================================================================================
 # NET
